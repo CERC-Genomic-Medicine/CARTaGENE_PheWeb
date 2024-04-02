@@ -112,7 +112,6 @@
 </style>
 {% endblock %}
 
-
 {% block contained %}
 {% for key in ['num_cases', 'num_controls', 'num_samples'] %}
  {% if key in pheno %}
@@ -132,9 +131,9 @@
 <div class="row">
     <div class="pheno-info col-xs-12 col-sm-8">
         {% if 'num_cases' in pheno %}
-          <p><b>{{ pheno.num_cases }}</b> cases, <b>{{ pheno.num_controls }}</b> controls</p>
+          <p><b>{{ pheno.num_cases }}</b> cases (<b>{{ pheno.num_cases_females }}</b> female cases and <b>{{ pheno.num_cases_males }}</b> male cases) |  <b>{{ pheno.num_controls }}</b> controls (<b>{{ pheno.num_females - pheno.num_cases_females }}</b> female controls and <b>{{pheno.num_males -  pheno.num_cases_males }}</b> male controls)</p>
         {% elif 'num_samples' in pheno %}
-          <p><b>{{ pheno.num_samples }}</b> samples</p>
+          <p><b>{{ pheno.num_samples }}</b> samples (<b>{{pheno.num_males }}</b> males <b>{{pheno.num_females}}</b> females) </p>
         {% endif %}
         {% if pheno.category %}
           <p>Category: <b>{{ pheno.category}}</b></p>
@@ -202,15 +201,38 @@
 </div>
 
 <div class="row">
-    <div class="pheno-info col-xs-12 col-sm-4 col-md-3 col-lg-3">
+    <div class="panel-body text-center col-xs-12 col-sm-4 col-md-3 col-lg-3">
       <h3 id="qq">QQ plot:</h3>
       <div id="qq_plot_container"></div>
       <p class="gc-control"></p>
       <i>(Genomic Control lambda calculated based on the 50th percentile (median), 10th percentile, 1st percentile, and 1/10th of a percentile)</i>
       <br><br><br>
     </div>
+   {% if 'num_controls' not in pheno %}
+      <div class="panel panel-default col-xs-12 col-sm-4 col-md-3 col-lg-3">
+	      <a class="pop" style="cursor: zoom-in"><img src='../static/images/{{ pheno.phenocode }}_phenotype_Distribution.png' width=100%></a>
 </div>
+<div class="panel panel-default col-xs-12 col-sm-4 col-md-3 col-lg-3">
+              <a class="pop" style="cursor: zoom-in"><img src='../static/images/{{ pheno.phenocode }}_age_phenotype.png' width=100%></a>
+</div>
+{% endif %}
+{% if 'num_controls' in pheno %}
+<div class="panel panel-default col-xs-10 col-sm-7 col-md-8 col-lg-8">
+              <a class="pop" style="cursor: zoom-in"><img src='../static/images/{{ pheno.phenocode }}_age_phenotype.png' width=100%></a>
+</div>
+{% endif %}
 
+</div>
+<div class="modal fade" id="imagemodal" tabindex="-1" style="width: 100%;" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="width: 60%;">
+    <div class="modal-content" style="width: 100%;">              
+      <div class="modal-body" style="width: 100%;">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <img src="" class="imagepreview" style="width: 100%;" >
+      </div>
+    </div>
+  </div>
+</div>
 {% if show_correlations %}
   <div class="row" id="correlations">
     <div class="col-md-12">
